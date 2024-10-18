@@ -42,35 +42,87 @@ const dummyTango: Vocabulary[] = [
   }
 ];
 
-
 const App = () => {
-  const [displaySwitchTangoIds, setDisplaySwitchTangoIds] = useState<number[]>([]);
+  const [checkedTangoIds, setCheckedTangoIds] = useState<number[]>([]);
+  const [tangoList, setTangoList] = useState<Vocabulary[]>(dummyTango);
+  const [newWord, setNewWord] = useState('');
+  const [newReading, setNewReading] = useState('');
+  const [newMeaning, setNewMeaning] = useState('');
 
-  const handleRowClick = (id: number) => {
-    setDisplaySwitchTangoIds(prev => 
+  const handleCheckboxChange = (id: number) => {
+    setCheckedTangoIds(prev => 
       prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id]
     );
   };
 
-  const tangoRows = dummyTango.map(tango => (
-    <tr key={tango.id} onClick={() => handleRowClick(tango.id)}>
+  const handleAddTango = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newTango: Vocabulary = {
+      id: tangoList.length + 1,
+      word: newWord,
+      reading: newReading,
+      meaning: newMeaning,
+      memorized: false,
+      isWeak: false,
+      deleteFlag: false,
+    };
+    setTangoList([...tangoList, newTango]);
+    setNewWord('');
+    setNewReading('');
+    setNewMeaning('');
+  };
+
+  const tangoRows = tangoList.map(tango => (
+    <tr key={tango.id}>
+      <td>
+        <input
+          type="checkbox"
+          checked={checkedTangoIds.includes(tango.id)}
+          onChange={() => handleCheckboxChange(tango.id)}
+        />
+      </td>
       <td>{tango.word}</td>
-      <td>{displaySwitchTangoIds.includes(tango.id) ? '' :tango.reading}</td>
-      <td>{displaySwitchTangoIds.includes(tango.id) ? '' :tango.meaning}</td>
+      <td>{checkedTangoIds.includes(tango.id) ? '' : tango.reading}</td>
+      <td>{checkedTangoIds.includes(tango.id) ? '' : tango.meaning}</td>
+      <td>
+      </td>
     </tr>
   ));
 
-
-  return(
-    <section>
-      <img src="./src/images/tango.logo.png" alt="Logo" className="logo" />
-      <div className='App'>
-        <section className='main'>{tangoRows}</section>
-      </div>
+  return (
+    <div className='App'>
+      <section className='main'>
+        <table>
+          <tbody>
+            {tangoRows}
+          </tbody>
+        </table>
+      </section>
+      <form onSubmit={handleAddTango}>
+        <input
+          type="text"
+          placeholder="你好"
+          value={newWord}
+          onChange={(e) => setNewWord(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="nǐ hǎo"
+          value={newReading}
+          onChange={(e) => setNewReading(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="こんにちは"
+          value={newMeaning}
+          onChange={(e) => setNewMeaning(e.target.value)}
+        />
+        <button type="submit">追加</button>
+      </form>
         <button className={styles.btn_01}>覚えた</button>
         <button className={styles.btn_02}>苦手</button>
         <button className={styles.btn_03}>削除</button>
-    </section>
+    </div>
   );
 }
 
