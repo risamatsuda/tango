@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
-import styles from './Button.module.css';
+import buttonStyles from './Button.module.css';
+import styles from './Page.module.css';
 
 type Vocabulary = {
   id: number;
@@ -16,7 +17,7 @@ const dummyTango: Vocabulary[] = [
   {
     id: 1,
     word: "离开",
-    reading: "Líkāi",
+    reading: "líkāi",
     meaning: "離れる",
     memorized: false,
     isWeak: false,
@@ -74,54 +75,60 @@ const App = () => {
 
   const tangoRows = tangoList.map(tango => (
     <tr key={tango.id}>
-      <td>
+      <td width="50">
         <input
           type="checkbox"
           checked={checkedTangoIds.includes(tango.id)}
           onChange={() => handleCheckboxChange(tango.id)}
         />
       </td>
-      <td>{tango.word}</td>
-      <td>{checkedTangoIds.includes(tango.id) ? '' : tango.reading}</td>
-      <td>{checkedTangoIds.includes(tango.id) ? '' : tango.meaning}</td>
-      <td>
-      </td>
+      <td width="250">{tango.word}</td>
+      <td width="250">{checkedTangoIds.includes(tango.id) ? '' : tango.reading}</td>
+      <td width="250">{checkedTangoIds.includes(tango.id) ? '' : tango.meaning}</td>
     </tr>
   ));
 
   return (
+   <div>
+    <div>
+    <img src="/tango.logo.png" alt="ロゴ" style={{ width: '100px', height: '100px' }} />
+    </div>
     <div className='App'>
       <section className='main'>
-        <table>
+        <table className={styles.table}>
           <tbody>
             {tangoRows}
           </tbody>
         </table>
       </section>
-      <form onSubmit={handleAddTango}>
+      <form className={styles.form} onSubmit={handleAddTango}>
         <input
+          className={styles.formItem}
           type="text"
           placeholder="你好"
           value={newWord}
           onChange={(e) => setNewWord(e.target.value)}
         />
         <input
+          className={styles.formItem}
           type="text"
           placeholder="nǐ hǎo"
           value={newReading}
           onChange={(e) => setNewReading(e.target.value)}
         />
         <input
+          className={styles.formItem}
           type="text"
           placeholder="こんにちは"
           value={newMeaning}
           onChange={(e) => setNewMeaning(e.target.value)}
         />
-        <button type="submit">追加</button>
+        <button className={buttonStyles.btn_02} type="submit">追加</button>
       </form>
-        <button className={styles.btn_01}>覚えた</button>
-        <button className={styles.btn_02}>苦手</button>
-        <button className={styles.btn_03}>削除</button>
+        <button className={buttonStyles.btn_01}>覚えた</button>
+        <button className={buttonStyles.btn_02}>苦手</button>
+        <button className={buttonStyles.btn_03}>削除</button>
+    </div>
     </div>
   );
 }
