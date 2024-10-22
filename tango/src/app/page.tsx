@@ -129,6 +129,10 @@ const App = () => {
         <button className={buttonStyles.btn_02}>苦手</button>
         <button className={buttonStyles.btn_03}>削除</button>
     </div>
+    <div>
+      <button className={buttonStyles.btn_04}>覚えた単語</button>
+      <button className={buttonStyles.btn_05}>苦手な単語</button>
+    </div>
     </div>
   );
 }
