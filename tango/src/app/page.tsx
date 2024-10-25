@@ -44,22 +44,30 @@ const dummyTango: Vocabulary[] = [
 ];
 
 const App = () => {
-  const [checkedTangoIds, setCheckedTangoIds] = useState<number[]>([]);
   const [tangoList, setTangoList] = useState<Vocabulary[]>(dummyTango);
+  const [allTangoList,setAllTangoList] = useState<Vocabulary[]>(dummyTango);
+  const [checkedTangoIds, setCheckedTangoIds] = useState<number[]>([]);
   const [newWord, setNewWord] = useState('');
   const [newReading, setNewReading] = useState('');
   const [newMeaning, setNewMeaning] = useState('');
 
+  //ロゴクリックでページ更新
+  const handleLogoClick = () => {
+    window.location.reload();
+  };
+
+  //単語にチェックを入れる
   const handleCheckboxChange = (id: number) => {
     setCheckedTangoIds(prev => 
       prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id]
     );
   };
 
+  //単語追加
   const handleAddTango = (e: React.FormEvent) => {
     e.preventDefault();
     const newTango: Vocabulary = {
-      id: tangoList.length + 1,
+      id: allTangoList.length + 1,
       word: newWord,
       reading: newReading,
       meaning: newMeaning,
@@ -67,12 +75,14 @@ const App = () => {
       isWeak: false,
       deleteFlag: false,
     };
+    setAllTangoList([...allTangoList, newTango]);
     setTangoList([...tangoList, newTango]);
     setNewWord('');
     setNewReading('');
     setNewMeaning('');
   };
 
+  //単語一覧
   const tangoRows = tangoList.map(tango => (
     <tr key={tango.id}>
       <td width="50">
@@ -88,10 +98,43 @@ const App = () => {
     </tr>
   ));
 
+  //単語覚えた
+  const handleMemorized = () => {
+    setTangoList(tangoList.map(tango => {
+      if (checkedTangoIds.includes(tango.id)) {
+        return {
+          ...tango,
+          memorized: true,
+          isWeak: false,
+        };
+      }
+      return tango;
+    }).filter(tango => tango.memorized === false));
+    setCheckedTangoIds([]);
+  };
+  
+  
+  //単語削除
+  const handleDeleteTango = () => {
+    setTangoList(allTangoList.filter(tango => !checkedTangoIds.includes(tango.id)));
+    setCheckedTangoIds([]);
+  };
+
+  //覚えた単語を表示
+  const displayMemorizedTango = () => {
+    setTangoList(allTangoList.filter(tango => tango.memorized === true));
+  };
+
+
   return (
    <div>
     <div>
-    <img src="/tango.logo.png" alt="ロゴ" style={{ width: '100px', height: '100px' }} />
+    <img 
+      src="/tango.logo.png" 
+      alt="ロゴ" 
+      style={{ width: '100px', height: '100px' }} 
+      onClick={handleLogoClick}
+    />
     </div>
     <div className='App'>
       <section className='main'>
@@ -125,12 +168,12 @@ const App = () => {
         />
         <button className={buttonStyles.btn_02} type="submit">追加</button>
       </form>
-        <button className={buttonStyles.btn_01}>覚えた</button>
-        <button className={buttonStyles.btn_02}>苦手</button>
-        <button className={buttonStyles.btn_03}>削除</button>
+        <button className={buttonStyles.btn_01} onClick={handleMemorized}>覚えた</button>
+        <button className={buttonStyles.btn_02} >苦手</button>
+        <button className={buttonStyles.btn_03} onClick={handleDeleteTango}>削除</button>
     </div>
     <div>
-      <button className={buttonStyles.btn_04}>覚えた単語</button>
+      <button className={buttonStyles.btn_04} onClick={displayMemorizedTango}>覚えた単語</button>
       <button className={buttonStyles.btn_05}>苦手な単語</button>
     </div>
     </div>
