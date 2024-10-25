@@ -45,13 +45,12 @@ const dummyTango: Vocabulary[] = [
 
 const App = () => {
   const [tangoList, setTangoList] = useState<Vocabulary[]>(dummyTango);
-  const [allTangoList,setAllTangoList] = useState<Vocabulary[]>(dummyTango);
+  const [allTangoList, setAllTangoList] = useState<Vocabulary[]>(dummyTango);
   const [checkedTangoIds, setCheckedTangoIds] = useState<number[]>([]);
   const [newWord, setNewWord] = useState('');
   const [newReading, setNewReading] = useState('');
   const [newMeaning, setNewMeaning] = useState('');
 
-  //ロゴクリックでページ更新
   const handleLogoClick = () => {
     window.location.reload();
   };
@@ -76,14 +75,14 @@ const App = () => {
       deleteFlag: false,
     };
     setAllTangoList([...allTangoList, newTango]);
-    setTangoList([...tangoList, newTango]);
+    setTangoList([...allTangoList, newTango].filter(tango => tango.memorized === false));
     setNewWord('');
     setNewReading('');
     setNewMeaning('');
   };
 
-  //単語一覧
-  const tangoRows = tangoList.map(tango => (
+   //単語一覧
+   const tangoRows = tangoList.map(tango => (
     <tr key={tango.id}>
       <td width="50">
         <input
@@ -100,7 +99,7 @@ const App = () => {
 
   //単語覚えた
   const handleMemorized = () => {
-    setTangoList(tangoList.map(tango => {
+    const updatedTangoList = allTangoList.map(tango => {
       if (checkedTangoIds.includes(tango.id)) {
         return {
           ...tango,
@@ -109,75 +108,105 @@ const App = () => {
         };
       }
       return tango;
-    }).filter(tango => tango.memorized === false));
+    });
+    setAllTangoList(updatedTangoList);
+    setTangoList(updatedTangoList.filter(tango => tango.memorized === false));
     setCheckedTangoIds([]);
   };
-  
-  
+
+  //単語苦手
+  const handleWeak = () => {
+    const updatedTangoList = allTangoList.map(tango => {
+      if (checkedTangoIds.includes(tango.id)) {
+        return {
+          ...tango,
+          isWeak: true,
+        };
+      }
+      return tango;
+    });
+    setAllTangoList(updatedTangoList);
+    setTangoList(updatedTangoList);
+    setCheckedTangoIds([]);
+  };
+
   //単語削除
   const handleDeleteTango = () => {
-    setTangoList(allTangoList.filter(tango => !checkedTangoIds.includes(tango.id)));
+    const updatedTangoList = allTangoList.filter(tango => !checkedTangoIds.includes(tango.id));
+    setAllTangoList(updatedTangoList);
+    setTangoList(updatedTangoList.filter(tango => tango.memorized === false));
     setCheckedTangoIds([]);
   };
 
   //覚えた単語を表示
-  const displayMemorizedTango = () => {
+  const handleMemorizedTango = () => {
     setTangoList(allTangoList.filter(tango => tango.memorized === true));
   };
 
+  //苦手な単語を表示
+  const hundleWeakTango = () => {
+    setTangoList(allTangoList.filter(tango => tango.isWeak === true));
+  };
+
+  //全ての単語を表示
+  const handleShowAllTango = () => {
+    setTangoList(allTangoList);
+  };
 
   return (
-   <div>
     <div>
-    <img 
-      src="/tango.logo.png" 
-      alt="ロゴ" 
-      style={{ width: '100px', height: '100px' }} 
-      onClick={handleLogoClick}
-    />
-    </div>
-    <div className='App'>
-      <section className='main'>
-        <table className={styles.table}>
-          <tbody>
-            {tangoRows}
-          </tbody>
-        </table>
-      </section>
-      <form className={styles.form} onSubmit={handleAddTango}>
-        <input
-          className={styles.formItem}
-          type="text"
-          placeholder="你好"
-          value={newWord}
-          onChange={(e) => setNewWord(e.target.value)}
+      {/* ロゴ画像を表示 */}
+      <div>
+        <img 
+          src="/tango.logo.png" 
+          alt="ロゴ" 
+          style={{ width: '100px', height: '100px' }} 
+          onClick={handleLogoClick} 
         />
-        <input
-          className={styles.formItem}
-          type="text"
-          placeholder="nǐ hǎo"
-          value={newReading}
-          onChange={(e) => setNewReading(e.target.value)}
-        />
-        <input
-          className={styles.formItem}
-          type="text"
-          placeholder="こんにちは"
-          value={newMeaning}
-          onChange={(e) => setNewMeaning(e.target.value)}
-        />
-        <button className={buttonStyles.btn_02} type="submit">追加</button>
-      </form>
+      </div>
+      <div className='App'>
+        <section className='main'>
+          <table className={styles.table}>
+            <tbody>
+             {tangoRows}
+            </tbody>
+          </table>
+        </section>
+        <form className={styles.form} onSubmit={handleAddTango}>
+          <input
+            className={styles.formItem}
+            type="text"
+            placeholder="你好"
+            value={newWord}
+            onChange={(e) => setNewWord(e.target.value)}
+          />
+          <input
+            className={styles.formItem}
+            type="text"
+            placeholder="nǐ hǎo"
+            value={newReading}
+            onChange={(e) => setNewReading(e.target.value)}
+          />
+          <input
+            className={styles.formItem}
+            type="text"
+            placeholder="こんにちは"
+            value={newMeaning}
+            onChange={(e) => setNewMeaning(e.target.value)}
+          />
+          <button className={buttonStyles.btn_02} type="submit">追加</button>
+        </form>
         <button className={buttonStyles.btn_01} onClick={handleMemorized}>覚えた</button>
-        <button className={buttonStyles.btn_02} >苦手</button>
+        <button className={buttonStyles.btn_02} onClick={handleWeak}>苦手</button>
         <button className={buttonStyles.btn_03} onClick={handleDeleteTango}>削除</button>
-    </div>
-    <div>
-      <button className={buttonStyles.btn_04} onClick={displayMemorizedTango}>覚えた単語</button>
-      <button className={buttonStyles.btn_05}>苦手な単語</button>
-    </div>
+      </div>
+      <div>
+        <button className={buttonStyles.btn_04} onClick={handleMemorizedTango}>覚えた単語</button>
+        <button className={buttonStyles.btn_05} onClick={hundleWeakTango}>苦手な単語</button>
+        <button className={buttonStyles.btn_06} onClick={handleShowAllTango}>全ての単語</button>
+      </div>
     </div>
   );
-}
+};
 
 export default App;
