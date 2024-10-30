@@ -16,9 +16,9 @@ type Vocabulary = {
 const dummyTango: Vocabulary[] = [
   {
     id: 1,
-    word: "离开",
-    reading: "líkāi",
-    meaning: "離れる",
+    word: "任何",
+    reading: "rènhé",
+    meaning: "どれでも",
     memorized: false,
     isWeak: false,
     deleteFlag: false,
@@ -50,6 +50,8 @@ const App = () => {
   const [newWord, setNewWord] = useState('');
   const [newReading, setNewReading] = useState('');
   const [newMeaning, setNewMeaning] = useState('');
+  const [showReadings, setShowReadings] = useState<{ [key: number]: boolean }>({});
+  const [showMeanings, setShowMeanings] = useState<{ [key: number]: boolean }>({});
 
   const handleLogoClick = () => {
     window.location.reload();
@@ -92,8 +94,8 @@ const App = () => {
         />
       </td>
       <td width="250">{tango.word}</td>
-      <td width="250">{checkedTangoIds.includes(tango.id) ? '' : tango.reading}</td>
-      <td width="250">{checkedTangoIds.includes(tango.id) ? '' : tango.meaning}</td>
+      <td width="250" onClick={() => toggleReading(tango.id)}>{showReadings[tango.id] ? '' : tango.reading}</td>
+      <td width="250" onClick={() => toggleMeaning(tango.id)}>{showMeanings[tango.id] ? '' : tango.meaning}</td>
     </tr>
   ));
 
@@ -152,6 +154,22 @@ const App = () => {
   const handleShowAllTango = () => {
     setTangoList(allTangoList);
   };
+
+  //発音の表示/非表示を切り替える
+  const toggleReading = (id: number) => {
+    setShowReadings(prev => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  }
+
+  //意味の表示/非表示を切り替える
+  const toggleMeaning = (id: number) => {
+    setShowMeanings(prev => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  }
 
   return (
     <div>
