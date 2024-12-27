@@ -1,0 +1,50 @@
+/* テーブルのスタイル */
+.table {
+  width: 750px;
+  border-collapse: collapse;
+  margin: 20px 10px 20px 10px;
+  font-size: 18px;
+  text-align: left;
+  table-layout: fixed;
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f4f4f4;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* 入力フォームのスタイル */
+.form {
+  margin: 20px 0;
+}
+
+.formItem {
+  border: 1px solid #ddd;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  border-radius: 6px;
+  margin-left: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  width: 200px;
+  float: left;
+  display: flex;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 上に詰める */
+  align-items: center; /* 水平方向の中央揃え */
+  height: 100vh; /* ビューポートの高さを100%に設定 */
+}
