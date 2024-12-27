@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import buttonStyles from './Button.module.css';
 import styles from './Page.module.css';
+import logo from '/tango.logo.png';
 
 type Vocabulary = {
   id: number;
@@ -189,7 +190,7 @@ const App = () => {
       {/* ロゴ画像を表示 */}
       <div>
         <img
-          src="/tango.logo.png"
+          src={logo}
           alt="ロゴ"
           style={{ width: '100px', height: '100px' }}
           onClick={handleLogoClick}
