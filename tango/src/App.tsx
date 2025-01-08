@@ -26,9 +26,9 @@ const dummyTango: Vocabulary[] = [
   },
   {
     id: 2,
-    word: '不善于',
-    reading: 'bù shànyú',
-    meaning: '苦手だ',
+    word: '愉快',
+    reading: 'yúkuài',
+    meaning: '愉快である',
     memorized: false,
     isWeak: false,
     deleteFlag: false,
@@ -38,6 +38,15 @@ const dummyTango: Vocabulary[] = [
     word: '水池子',
     reading: 'shuǐchízi',
     meaning: '水たまり',
+    memorized: false,
+    isWeak: false,
+    deleteFlag: false,
+  },
+  {
+    id: 4,
+    word: '不善于',
+    reading: 'bù shànyú',
+    meaning: '苦手だ',
     memorized: false,
     isWeak: false,
     deleteFlag: false,
@@ -103,10 +112,10 @@ const App = () => {
       </td>
       <td width="250">{tango.word}</td>
       <td width="250" onClick={() => toggleReading(tango.id)}>
-        {showReadings[tango.id] ? '' : tango.reading}
+        {showReadings[tango.id] ? tango.reading : ''}
       </td>
       <td width="250" onClick={() => toggleMeaning(tango.id)}>
-        {showMeanings[tango.id] ? '' : tango.meaning}
+        {showMeanings[tango.id] ? tango.meaning : ''}
       </td>
     </tr>
   ));
@@ -164,9 +173,9 @@ const App = () => {
     setTangoList(allTangoList.filter((tango) => tango.isWeak === true));
   };
 
-  //全ての単語を表示
+  //単語一覧を表示
   const handleShowAllTango = () => {
-    setTangoList(allTangoList);
+    setTangoList(allTangoList.filter((tango) => tango.deleteFlag === false && tango.memorized === false));
   };
 
   //発音の表示/非表示を切り替える
@@ -248,7 +257,7 @@ const App = () => {
       </div>
       <div>
         <button className={buttonStyles.btn_06} onClick={handleShowAllTango}>
-          全ての単語
+          単語一覧
         </button>
       </div>
     </div>
